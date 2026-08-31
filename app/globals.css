@@ -178,3 +178,5 @@
 .sim-where p:not(.sens-explainer),.sens-rows p{grid-template-columns:minmax(44px,52px) minmax(0,1fr) minmax(40px,46px)}
 .sim-where b,.sens-rows b{white-space:nowrap;font-variant-numeric:tabular-nums}
 .sim-where span,.sens-rows span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* Creator attribution */
+.creator-credit{color:#aeb8bb;font:11px 'Barlow Condensed';letter-spacing:.4px;text-decoration:none;white-space:nowrap}.creator-credit:hover{color:var(--red)}

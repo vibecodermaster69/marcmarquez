@@ -350,6 +350,7 @@ export default function Dashboard({ data }: { data: DashboardData }) {
           <div><span className="footer-icon">⌁</span><p><b>PREDICTIONS &amp; MODELS</b><br /><small>The realistic minimum uses empirical rival form — points and DNFs only. Probability arrives with the simulation.</small></p></div>
           <p className="fine-print">MotoGP is unpredictable.<br />The Phoenix Equation gives clarity. The track delivers the truth.</p>
           <span className="footer-bird">✦</span>
+          <a className="creator-credit" href="https://x.com/RaceDayIndia" target="_blank" rel="noreferrer">Developed by Race Day India ↗</a>
         </footer>
       </section>
     </main>
