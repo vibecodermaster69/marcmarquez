@@ -49,6 +49,26 @@ from WSL before using any of the scripts below.
 | `npm test` | Unit and integration tests |
 | `npm run test:live` | Contract tests against the live motogp.com API |
 
+## Deployment
+
+The deployment is a **reader**. A serverless filesystem is read-only, so the
+site cannot ingest results: opening the database read-write, running migrations
+or switching the journal to WAL would all fail at boot. SQLite is opened
+read-only when `VERCEL=1`, and `/api/sync` returns 501 there.
+
+Ingest happens in the GitHub Actions `sync` workflow, which commits the updated
+`phoenix93.db` back to this repository. That push redeploys the site, so the
+page is refreshed by the same commit that fetched the race:
+
+```
+race ends -> +2h -> Actions ingests -> commits phoenix93.db -> redeploy -> new numbers
+```
+
+There is no `vercel.json`: Next.js is auto-detected, no environment variables
+are required, and Vercel crons would be pointless because a reader cannot
+ingest. The dashboard is prerendered at deploy time, since the data can only
+change when a deploy happens.
+
 ## Architecture
 
 Three layers, and only one of them guesses.
