@@ -19,6 +19,17 @@ const MIGRATIONS_FOLDER = path.join(process.cwd(), "drizzle");
 const connections = new Map<string, Db>();
 
 /**
+ * True on a serverless host, where the filesystem is read-only.
+ *
+ * The deployment is a READER. Results are ingested by the GitHub Actions
+ * workflow, which commits the updated database back to the repository; that
+ * push redeploys the site. Opening the file read-write there would fail at
+ * boot — as would running migrations, or switching the journal to WAL, both of
+ * which write to disk.
+ */
+export const READ_ONLY = process.env.VERCEL === "1" || process.env.PHOENIX_READ_ONLY === "1";
+
+/**
  * Opens a database and brings it up to schema.
  * Pass ":memory:" for tests — they then run against a real SQLite engine
  * with no file, no container and no network.
@@ -29,14 +40,20 @@ export function createDb(file: string = DEFAULT_DB_PATH): Db {
     if (existing) return existing;
   }
 
-  const sqlite = new Database(file);
-  sqlite.pragma("journal_mode = WAL");
+  const readonly = READ_ONLY && file !== ":memory:";
+  const sqlite = new Database(file, readonly ? { readonly: true, fileMustExist: true } : undefined);
+
+  if (!readonly) {
+    sqlite.pragma("journal_mode = WAL");
+    // Concurrent readers (the web request, a sync pass, a test worker) must
+    // wait for a writer rather than failing outright.
+    sqlite.pragma("busy_timeout = 5000");
+  }
   sqlite.pragma("foreign_keys = ON");
-  // Concurrent readers (the web request, a sync pass, a test worker) must wait
-  // for a writer rather than failing outright.
-  sqlite.pragma("busy_timeout = 5000");
+
   const db = drizzle(sqlite, { schema });
-  migrate(db, { migrationsFolder: MIGRATIONS_FOLDER });
+  // Migrations write; the shipped database is already migrated.
+  if (!readonly) migrate(db, { migrationsFolder: MIGRATIONS_FOLDER });
   if (file !== ":memory:") connections.set(file, db);
   return db;
 }

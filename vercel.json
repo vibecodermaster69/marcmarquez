@@ -1,14 +1,11 @@
 {
-  "crons": [
-    {
-      "path": "/api/sync",
-      "comment": "Race weekends: every hour through Saturday and Sunday, plus the Monday tail for Qatar and Australia, whose races finish after midnight UTC.",
-      "schedule": "0 * * * 6,0,1"
-    },
-    {
-      "path": "/api/sync",
-      "comment": "Daily backstop at 20:00 IST (14:30 UTC) so a missed weekend run is always caught.",
-      "schedule": "30 14 * * *"
-    }
-  ]
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "comment": [
+    "No crons here on purpose. The deployment is a READER: a serverless",
+    "filesystem is read-only, so it cannot ingest results.",
+    "Ingest runs in the GitHub Actions 'sync' workflow, which commits the",
+    "updated phoenix93.db back to the repository. That push redeploys this",
+    "site, so the page is refreshed by the same commit that fetched the race."
+  ],
+  "github": { "silent": true }
 }
