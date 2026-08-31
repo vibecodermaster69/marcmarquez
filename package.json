@@ -1,0 +1,41 @@
+{
+  "name": "phoenix-93",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "db:generate": "drizzle-kit generate",
+    "seed": "tsx scripts/seed.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:live": "LIVE=1 vitest run lib/motogp/live.test.ts",
+    "verify": "tsx scripts/verify.ts",
+    "inspect": "tsx scripts/inspect-event.ts",
+    "sync": "tsx scripts/sync.ts",
+    "schedule": "tsx scripts/schedule.ts",
+    "simulate": "tsx scripts/simulate.ts",
+    "backtest": "tsx scripts/backtest.ts",
+    "tune": "tsx scripts/tune.ts",
+    "gen:workflow": "tsx scripts/gen-workflow.ts"
+  },
+  "dependencies": {
+    "better-sqlite3": "^12.11.1",
+    "drizzle-orm": "^0.45.2",
+    "next": "^14.2.35",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^9.6.0",
+    "@types/node": "20.17.10",
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1",
+    "drizzle-kit": "^0.31.10",
+    "tsx": "^4.23.13",
+    "typescript": "5.7.2",
+    "vitest": "^4.1.11"
+  }
+}

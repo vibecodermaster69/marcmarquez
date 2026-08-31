@@ -1,0 +1,14 @@
+{
+  "crons": [
+    {
+      "path": "/api/sync",
+      "comment": "Race weekends: every hour through Saturday and Sunday, plus the Monday tail for Qatar and Australia, whose races finish after midnight UTC.",
+      "schedule": "0 * * * 6,0,1"
+    },
+    {
+      "path": "/api/sync",
+      "comment": "Daily backstop at 20:00 IST (14:30 UTC) so a missed weekend run is always caught.",
+      "schedule": "30 14 * * *"
+    }
+  ]
+}

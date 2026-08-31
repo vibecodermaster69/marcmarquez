@@ -1,0 +1,25 @@
+# Secrets — never commit. This repository is public.
+.env
+.env.*
+!.env.example
+
+# Dependencies and build output
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+
+# SQLite side-car files (the database itself IS committed: the sync workflow
+# needs the season's state, and it is the app's only store)
+phoenix93.db-wal
+phoenix93.db-shm
+
+# Editor / OS
+.DS_Store
+*.log
+
+# Vendored agent tooling, not part of this application.
+# (_bmad-output/ IS kept: it holds the brainstorm record, intent doc,
+#  engine specification and build sequence this project was built from.)
+.claude/
+_bmad/

@@ -1,0 +1,180 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+:root{--bg:#02070b;--panel:#071016;--panel2:#09141b;--line:#26343c;--muted:#7f8a90;--text:#f2f3f2;--red:#fb2e2e;--red2:#8d161a;--orange:#ff721d;--green:#49e68a}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}button{font:inherit;color:inherit;cursor:pointer}button:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.app-shell{min-height:100vh;display:flex;background:radial-gradient(circle at 70% -10%,#152029 0,transparent 34%),#02070b}.sidebar{width:210px;flex:none;border:1px solid #1b2931;border-radius:12px;margin:6px;background:linear-gradient(180deg,#050b10,#02070b);padding:18px 11px 16px;display:flex;flex-direction:column}.brand-mark{text-align:center;padding:7px 0 29px;font-family:'Barlow Condensed';font-weight:800;font-style:italic}.brand-phoenix{color:var(--red);display:block;font-size:48px;line-height:38px;transform:rotate(-20deg)}.brand-name{font-size:22px;letter-spacing:-.5px}.brand-name b{color:var(--red);font-style:normal}.nav-list{display:grid;gap:7px}.nav-item{background:transparent;border:1px solid transparent;border-radius:7px;text-align:left;padding:11px 12px;color:#98a2a7;text-transform:uppercase;font-size:12px;font-weight:600;letter-spacing:.3px;display:flex;gap:13px;align-items:center}.nav-item:hover{color:white;background:#0b151b}.nav-item.active{color:white;border-color:var(--red);background:linear-gradient(90deg,#35100f,#120b0b)}.nav-icon{font-size:19px;width:17px;text-align:center}.rider-mini{border:1px solid #1d2c34;border-radius:9px;margin-top:auto;padding:14px 11px 10px}.eyebrow{color:#9ca5a9;font:600 10px 'Barlow Condensed';letter-spacing:1.5px}.rider-id{display:flex;align-items:center;gap:11px;margin:4px 0 12px}.rider-id strong{font:800 38px 'Barlow Condensed';color:var(--red);letter-spacing:-2px}.rider-id span{font:700 12px 'Barlow Condensed';line-height:12px}.profile-btn,.sync-btn,.wide-btn{border:1px solid #23343d;background:transparent;border-radius:6px;padding:10px 11px;font-size:10px;font-weight:700;letter-spacing:.7px;width:100%;text-align:left}.profile-btn span{float:right}.sync-block{font-size:11px;color:#909aa0;line-height:20px;padding:17px 5px 0}.sync-block b{color:var(--green);font-size:10px}.sync-block small{display:block;color:#7b878d;line-height:15px;margin-top:6px}.live-dot,.sync-btn i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 9px var(--green);margin:0 5px}.content{flex:1;min-width:0;padding:18px 26px 24px}.topbar{display:flex;justify-content:space-between;align-items:flex-start;padding:0 4px 16px}.topbar h1{font:800 34px 'Barlow Condensed';letter-spacing:1.5px;margin:0}.topbar p{margin:1px 0;color:#b8c0c2;font:16px 'Barlow Condensed';letter-spacing:.2px}.slash{color:var(--red);font-size:16px;margin-right:9px}.top-meta{display:flex;gap:21px;align-items:center;color:#858f94;font:14px 'Barlow Condensed'}.sync-btn{width:auto;color:#d1d6d8;padding:9px 11px}.dashboard-grid{display:grid;grid-template-columns:1.55fr 1.55fr 1fr 1fr;grid-template-rows:auto auto auto;gap:18px}.card{border:1px solid var(--line);background:linear-gradient(135deg,rgba(10,21,28,.96),rgba(3,11,16,.97));border-radius:10px;overflow:hidden;position:relative;box-shadow:inset 0 0 35px rgba(0,0,0,.18)}.hero-card{grid-column:1/3;display:flex;min-height:300px;background:radial-gradient(circle at 5% 90%,#17242b,transparent 30%),linear-gradient(110deg,#0a151c,#071016 55%,#060c11)}.hero-image{width:38%;position:relative;overflow:hidden;background:linear-gradient(90deg,#13252e,#090f13)}.hero-image img{object-fit:cover;object-position:top center;filter:saturate(1.1);mix-blend-mode:screen}.hero-image:after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 65%,#071016 100%),linear-gradient(0deg,#071016 0,transparent 35%)}.hero-copy{width:62%;padding:18px 18px 15px}.rider-title{display:flex;justify-content:space-between;min-height:58px;border-bottom:1px solid #26363f}.rider-title h2,.track-head h2{font:700 25px 'Barlow Condensed';letter-spacing:1px;margin:0}.rider-title p{font:11px 'Barlow Condensed';color:#adb7ba;margin:4px 0}.rider-title p span{display:inline-block;width:1px;height:10px;background:#627078;margin:0 8px}.number-img{object-fit:contain;filter:drop-shadow(0 3px 7px #9c1b1b)}.hero-stats{display:grid;grid-template-columns:1fr 1fr 1.2fr;margin-top:14px}.hero-stats>div{border-right:1px solid #25353e;padding:0 13px}.hero-stats>div:first-child{padding-left:0}.hero-stats>div:last-child{border:0}.hero-stats span,.hero-substats span,.strategy-rows span{font:11px 'Barlow Condensed';color:#849197;letter-spacing:.8px}.hero-stats strong{display:block;font:600 32px 'Barlow Condensed';margin-top:3px}.hero-stats sup{font:10px 'Barlow Condensed';color:#9da5a8;margin-left:4px}.red{color:var(--red)!important}.orange{color:var(--orange)!important}.hero-substats{display:flex;gap:28px;border-top:1px solid #26363f;margin-top:12px;padding-top:10px}.hero-substats b{display:block;font:600 22px 'Barlow Condensed';margin-top:3px}.hero-substats em{font:11px Inter;color:#9ca5a8;font-style:normal}.quote{border:1px solid #32414a;background:#0c171d;margin-top:10px;padding:7px 9px;font:11px 'Barlow Condensed';color:#c5cccd}.quote b{font:700 27px Georgia;color:var(--red);vertical-align:-6px;margin-right:5px}.probability-card{grid-column:3/5;min-height:300px;padding:17px}.card-heading,.section-title{display:flex;justify-content:space-between;align-items:flex-start}.card h3,.section-title h3{font:600 17px 'Barlow Condensed';letter-spacing:1px;margin:0}.card-heading p{font:12px 'Barlow Condensed';color:#929da1;margin:4px 0}.info{border:1px solid #536169;border-radius:50%;width:15px;height:15px;display:grid;place-items:center;color:#95a0a4;font-size:10px}.gauge{width:61%;height:214px;position:relative;margin:3px auto 0}.gauge-arc{position:absolute;inset:14px 0 0;border:10px solid #2a3439;border-bottom:none;border-radius:280px 280px 0 0;overflow:visible;clip-path:polygon(0 0,100% 0,100% 100%,0 100%);background:conic-gradient(from 270deg at 50% 100%,var(--red) 0deg calc(var(--prob)*1.8deg),#2a3439 calc(var(--prob)*1.8deg) 180deg,transparent 180deg)}.gauge-arc:after{content:'';position:absolute;inset:12px;border-radius:inherit;border:1px solid #101c23;border-bottom:0}.gauge-value{position:absolute;left:0;right:0;top:64px;text-align:center;font:700 66px 'Barlow Condensed';letter-spacing:-2px;z-index:2}.gauge-value small{font-size:38px}.gauge-value span{display:block;color:var(--red);font:700 14px 'Barlow Condensed';letter-spacing:1px;line-height:14px;margin-top:-5px}.gauge-label{position:absolute;color:#a0a8ab;font:14px 'Barlow Condensed'}.gauge-label.left{left:-17px;bottom:2px}.gauge-label.top{left:48%;top:-12px}.gauge-label.right{right:-22px;bottom:2px}.insights{position:absolute;right:18px;top:50px;width:145px;color:#99a4a8;font:11px 'Barlow Condensed'}.insights>b{color:#d6dcdd;font-size:12px}.insights p{margin:14px 0 0;line-height:14px}.insights p:first-letter{color:var(--orange);font-size:17px}.insights strong{color:#d5dcdd;font-weight:500}.insights small{color:#838e92}.model-updated{position:absolute;top:206px;right:0;white-space:nowrap}.projection-card{grid-column:1/3;padding:16px}.section-title{border-bottom:1px solid #27373f;padding-bottom:9px}.section-title h3 span{color:#9ca7ab;font-weight:400}.legend{display:flex;gap:19px;color:#9da8ac;font:11px 'Barlow Condensed';margin:10px 0 2px}.legend-line{display:inline-block;width:19px;border-top:2px solid var(--red);vertical-align:middle;margin-right:4px}.legend-line.projection{border-top:2px dashed #e8e5da}.legend-line.pace{border-top:2px dotted var(--red)}.chart{display:flex;height:190px;position:relative}.y-axis,.x-axis{display:flex;flex-direction:column;justify-content:space-between;color:#849095;font:10px 'Barlow Condensed'}.y-axis{padding:9px 5px 20px 0}.chart-area{flex:1;position:relative}.grid-lines{position:absolute;inset:7px 0 21px;background:repeating-linear-gradient(to bottom,transparent 0,transparent calc(25% - 1px),#203039 calc(25% - 1px),#203039 25%);border-left:1px solid #1d2c34}.chart-area svg{position:absolute;inset:7px 0 21px;width:100%;height:calc(100% - 28px);overflow:visible}.projection-path{fill:none;stroke:#dfddd5;stroke-width:2;stroke-dasharray:6 6}.actual-path{fill:none;stroke:var(--red);stroke-width:3}.now-line{position:absolute;top:4px;bottom:20px;left:53%;border-left:1px dashed #b7bab5}.now-line span{position:absolute;bottom:-19px;left:-14px;background:#f4f3ea;color:#1b2021;padding:2px 4px;font:700 9px Inter}.end-label{position:absolute;right:-8px;top:29px;font:700 14px 'Barlow Condensed'}.x-axis{position:absolute;bottom:0;left:0;right:0;flex-direction:row}.projection-footer{display:flex;align-items:center;gap:10px;border:1px solid #26363e;border-radius:7px;padding:8px 13px;margin:0 5px;color:#8d989c;font:11px 'Barlow Condensed'}.projection-footer>span{font-size:22px}.projection-footer p{margin:0}.projection-footer b{font-size:18px;color:var(--red)}.projection-footer small{margin-left:auto}.strategy-card{grid-column:3/4;padding:16px}.track-head{display:flex;gap:10px;align-items:flex-start;padding:12px 0 11px;border-bottom:1px solid #293841}.flag{font-size:24px}.track-head h2{font-size:23px;margin-top:2px}.track-head p{font:10px 'Barlow Condensed';line-height:12px;color:#a4afb2;margin:3px 0}.track-line{font-size:52px;line-height:48px;color:#a5afb2;margin-left:auto;transform:rotate(-35deg)}.strategy-rows{display:grid;gap:0}.strategy-rows div{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1b2b33;padding:8px 0}.strategy-rows b{font:600 13px 'Barlow Condensed';letter-spacing:.5px}.strategy-rows b small{font-size:10px;color:#bdc4c5}.threat-bars{font-style:normal;font-size:11px;letter-spacing:1px;margin-left:4px}.wide-btn{margin-top:12px;text-align:center;color:#b1bbbd;padding:10px}.wide-btn span{float:right;font-size:16px;line-height:10px}.timeline-card{grid-column:4/5;padding:16px;min-width:0}.timeline{display:flex;justify-content:space-between;gap:4px;margin:15px 0 5px}.timeline-item{display:flex;flex-direction:column;align-items:center;gap:5px}.timeline-dot{width:18px;height:18px;border:1px solid #526169;border-radius:50%;font:11px Inter;display:grid;place-items:center}.timeline-item.complete .timeline-dot{border-color:var(--green);color:var(--green)}.timeline-item.next .timeline-dot{border:1px solid var(--red);color:var(--red);box-shadow:0 0 9px #751919}.timeline-item small{font:10px 'Barlow Condensed';color:#8d999d}.timeline-legend{border-top:1px solid #25353d;padding-top:11px;display:flex;gap:9px;white-space:nowrap;color:#95a0a4;font:10px 'Barlow Condensed'}.green-dot,.red-dot,.gray-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:3px}.green-dot{background:var(--green)}.red-dot{background:var(--red)}.gray-dot{background:#59636a}.results-card{grid-column:3/4;padding:16px}.result-row{display:grid;grid-template-columns:26px 1fr 25px 50px;align-items:center;border-bottom:1px solid #1c2b32;padding:8px 0;font:11px 'Barlow Condensed'}.result-row>span{color:#879296}.result-row b{font-weight:500}.result-row strong{color:var(--red)}.result-row em{color:#b9c2c4;font-style:normal;text-align:right;font-size:10px}.standings-card{grid-column:4/5;padding:16px}.standings-head,.standing-row{display:grid;grid-template-columns:25px 1fr 45px 43px;gap:5px;align-items:center}.standings-head{padding:10px 0 6px;color:#7d898e;font:9px 'Barlow Condensed'}.standing-row{font:11px 'Barlow Condensed';padding:8px 4px;border-bottom:1px solid #1c2b32}.standing-row b{font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.standing-row strong{text-align:right}.standing-row em{text-align:right;color:#9da7aa;font-style:normal}.marc-row{background:linear-gradient(90deg,#451414,#1d1010);border:1px solid #8c2525;color:#fff}.footer{border:1px solid #1b2a32;border-radius:9px;margin-top:18px;padding:17px 20px;display:flex;align-items:center;gap:30px;background:#071016}.footer>div{display:flex;gap:10px;align-items:flex-start;flex:1}.footer-icon{border:1px solid #304049;border-radius:7px;min-width:32px;height:32px;display:grid;place-items:center;font-size:21px}.footer p{margin:0;font:11px 'Barlow Condensed';color:#d6dcdd}.footer small{color:#8e999c}.fine-print{border-left:1px solid #314149;padding-left:30px;color:#a1abad!important}.footer-bird{font-size:32px;color:var(--red)}.floating-sim{position:fixed;right:25px;bottom:24px;border:1px solid var(--red);background:#4c1111;border-radius:999px;padding:12px 18px;font:700 11px 'Barlow Condensed';letter-spacing:1px;box-shadow:0 6px 25px #000}.floating-sim span{margin-left:7px}.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.7);display:grid;place-items:center;z-index:10}.modal{width:min(420px,calc(100% - 30px));border:1px solid var(--red);background:#071016;border-radius:12px;padding:25px;box-shadow:0 20px 90px #000}.modal h2{font:700 28px 'Barlow Condensed';margin:7px 0}.modal p{color:#9ba5a8}.modal-stat{display:flex;justify-content:space-between;border-top:1px solid #273740;border-bottom:1px solid #273740;padding:18px 0;margin:20px 0;font:12px 'Barlow Condensed'}.modal-stat b{font:700 24px 'Barlow Condensed';color:var(--red)}.modal-stat small{font:10px Inter;color:#a4adaf}
+@media(max-width:1100px){.sidebar{width:180px}.content{padding:15px}.dashboard-grid{grid-template-columns:1.3fr 1.3fr 1fr}.hero-card,.projection-card{grid-column:1/3}.probability-card{grid-column:3/4}.timeline-card{grid-column:1/4}.strategy-card{grid-column:1/2}.results-card{grid-column:2/3}.standings-card{grid-column:3/4}.top-meta>span{display:none}}@media(max-width:760px){.app-shell{display:block}.sidebar{width:auto;margin:0;border-radius:0;padding:10px;display:block}.brand-mark{display:inline-block;padding:0 16px 0 0}.brand-phoenix{display:none}.brand-name{font-size:19px}.nav-list{display:flex;overflow:auto;gap:5px;margin-top:10px}.nav-item{flex:none;padding:8px 9px;font-size:10px}.nav-item:not(.active) .nav-icon{display:none}.rider-mini,.sync-block{display:none}.content{padding:14px 10px 70px}.topbar h1{font-size:28px}.topbar p{font-size:14px}.topbar{padding:0 2px 12px}.dashboard-grid{display:flex;flex-direction:column;gap:12px}.card{width:100%}.hero-card{min-height:260px}.hero-image{width:34%}.hero-copy{width:66%;padding:12px}.rider-title h2{font-size:20px}.number-img{width:92px;height:92px}.hero-stats strong{font-size:25px}.hero-stats span{font-size:9px}.hero-substats{gap:10px}.hero-substats b{font-size:18px}.gauge{width:63%;margin-left:0}.insights{right:10px;width:120px}.footer{display:grid;gap:13px;padding:13px}.fine-print{border:0;border-top:1px solid #314149;padding:13px 0 0}.footer-bird{display:none}.floating-sim{right:14px;bottom:14px}}
+
+/* Alignment pass: keep the probability visualization and insights inside one stable card. */
+.probability-card{display:grid;grid-template-columns:minmax(0,1fr) 168px;grid-template-rows:auto 1fr;column-gap:18px;align-items:stretch}
+.probability-card .card-heading{grid-column:1/-1}
+.probability-card .gauge{grid-column:1;grid-row:2;width:100%;max-width:360px;margin:3px auto 0}
+.probability-card .insights{grid-column:2;grid-row:2;position:static;width:auto;min-width:0;align-self:center;border-left:1px solid #25343c;padding:0 0 0 16px}
+.probability-card .model-updated{position:static;display:block;margin-top:18px;white-space:normal}
+
+@media(max-width:1100px){.probability-card{grid-template-columns:minmax(0,1fr) 145px;column-gap:12px}}
+@media(max-width:760px){.probability-card{display:block}.probability-card .gauge{width:63%;margin:3px 0 0}.probability-card .insights{border-left:0;border-top:1px solid #25343c;padding:12px 0 0;margin-top:12px;width:100%}}
+
+/* Mobile probability card: give Model Insights the full card width. */
+@media(max-width:760px){
+  .probability-card{padding:14px}
+  .probability-card .gauge{width:100%;max-width:310px;height:194px;margin:0 auto}
+  .probability-card .insights{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px 10px;align-items:start;padding-top:14px;margin-top:8px}
+  .probability-card .insights>b{grid-column:1/-1;font-size:14px;letter-spacing:.7px}
+  .probability-card .insights p{margin:0;padding:9px 8px;min-height:55px;border:1px solid #1f3038;border-radius:6px;background:#081218;line-height:16px;font-size:12px}
+  .probability-card .insights strong{font-size:12px}
+  .probability-card .insights small{font-size:10px;line-height:12px}
+  .probability-card .model-updated{grid-column:1/-1;margin-top:2px;font-size:10px}
+}
+@media(max-width:430px){
+  .probability-card .insights{grid-template-columns:1fr}
+  .probability-card .insights p{min-height:0;padding:8px 10px}
+}
+
+/* Hero metrics use one shared column rhythm so dividers and values stay aligned. */
+.hero-stats{grid-template-columns:repeat(3,minmax(0,1fr));min-width:0}
+.hero-stats>div{min-width:0;padding-left:16px;padding-right:16px}
+.hero-stats>div:first-child{padding-left:0}
+.hero-stats>div:last-child{padding-right:0}
+.hero-stats span{display:block;min-height:27px;line-height:13px}
+.hero-stats strong{line-height:34px;white-space:nowrap}
+.hero-substats{display:grid;grid-template-columns:1fr 1.25fr;gap:0}
+.hero-substats>div{min-width:0}
+.hero-substats>div+div{border-left:1px solid #25353e;padding-left:18px}
+@media(max-width:760px){.hero-stats>div{padding-left:8px;padding-right:8px}.hero-stats>div:first-child{padding-left:0}.hero-stats>div:last-child{padding-right:0}.hero-substats>div+div{padding-left:10px}}
+
+/* M3 — Layer 1 cards. The minimum card occupies the slot the probability gauge will take at M6. */
+.minimum-card{grid-column:3/5;min-height:300px;padding:17px;display:flex;flex-direction:column;gap:12px}
+.state-banner{border:1px solid #2b3b44;border-left-width:4px;border-radius:7px;padding:10px 12px;background:#081218}
+.state-banner b{display:block;font:700 18px 'Barlow Condensed';letter-spacing:1.2px}
+.state-banner small{color:#96a1a5;font:11px 'Barlow Condensed';line-height:14px;display:block;margin-top:3px}
+.state-live{border-left-color:var(--orange)}.state-live b{color:var(--orange)}
+.state-out{border-left-color:var(--red)}.state-out b{color:var(--red)}
+.state-done{border-left-color:var(--green)}.state-done b{color:var(--green)}
+.bounds{display:grid;grid-template-columns:1fr 1fr;gap:12px;flex:1}
+.bound{border:1px solid #24343c;border-radius:8px;padding:12px;background:linear-gradient(160deg,#0a151b,#060d12);display:flex;flex-direction:column}
+.bound-label{font:600 10px 'Barlow Condensed';letter-spacing:1.1px;color:#7f8b91}
+.bound strong{font:700 46px 'Barlow Condensed';letter-spacing:-1px;line-height:52px;margin-top:2px}
+.bound em{font:12px 'Barlow Condensed';font-style:normal;color:#c2cacc}
+.bound small{margin-top:auto;padding-top:8px;color:#7d888d;font:10px 'Barlow Condensed';line-height:13px}
+.pending-note{margin:0;color:#7c878c;font:11px 'Barlow Condensed';line-height:14px}
+.projection-card .legend{margin-bottom:6px}
+.timeline-card .timeline{flex-wrap:wrap;gap:6px 4px;justify-content:flex-start}
+@media(max-width:1100px){.minimum-card{grid-column:3/4}.bounds{grid-template-columns:1fr}}
+@media(max-width:760px){.minimum-card{grid-column:auto}.bounds{grid-template-columns:1fr 1fr}.bound strong{font-size:34px;line-height:38px}}
+
+/* M5 — the realistic minimum leads; the provable bounds become context. */
+.headline-minimum{border:1px solid #3a2a1c;border-radius:8px;padding:12px 14px;background:linear-gradient(160deg,#171009,#0a0f13)}
+.headline-minimum .bound-label{color:var(--orange)}
+.headline-minimum strong{display:block;font:700 58px 'Barlow Condensed';letter-spacing:-2px;line-height:58px;color:var(--orange)}
+.headline-minimum em{display:block;font:13px 'Barlow Condensed';font-style:normal;color:#d3dadb}
+.headline-minimum small{display:block;margin-top:5px;color:#8b959a;font:11px 'Barlow Condensed'}
+.minimum-card .bounds{flex:none;gap:10px}
+.minimum-card .bound{padding:9px 11px}
+.minimum-card .bound strong{font-size:30px;line-height:34px}
+.outlook{border-top:1px solid #24343c;padding-top:9px;margin-top:auto}
+.outlook>b{font:600 11px 'Barlow Condensed';letter-spacing:1.1px;color:#98a3a7}
+.outlook p{display:flex;justify-content:space-between;margin:5px 0 0;font:12px 'Barlow Condensed'}
+.outlook p em{font-style:normal;color:var(--red)}
+.outlook small{display:block;margin-top:7px;color:#788388;font:10px 'Barlow Condensed';line-height:13px}
+.tag{font-style:normal;font:600 8px Inter;letter-spacing:.8px;border-radius:3px;padding:2px 4px;margin-left:5px;vertical-align:1px}
+.tag-model{background:#3a2a12;color:var(--orange);border:1px solid #5b4020}
+.tag-fact{background:#16242b;color:#8fa0a7;border:1px solid #273b45}
+
+/* Pace headline, and results that show both sessions of a weekend. */
+.headline-minimum strong{font-size:52px;line-height:54px}
+.headline-minimum strong small{font:600 15px 'Barlow Condensed';letter-spacing:1px;color:#c08b52;margin-left:6px}
+.ways{margin-top:8px;border-top:1px solid #33251a;padding-top:7px}
+.ways>span{display:block;font:600 9px 'Barlow Condensed';letter-spacing:1px;color:#8b7256}
+.ways b{display:inline-block;font:12px 'Barlow Condensed';font-weight:500;color:#e2e6e6;background:#1b1409;border:1px solid #3a2a1a;border-radius:4px;padding:3px 7px;margin:5px 5px 0 0}
+.minimum-card .bound strong small{font:600 11px 'Barlow Condensed';color:#8d979b;margin-left:4px}
+.minimum-card .bound em{font:11px 'Barlow Condensed';font-style:normal;color:#aeb7b9;line-height:14px;display:block;margin-top:3px}
+.results-head,.result-row{display:grid;grid-template-columns:26px 1fr 34px 34px 30px;gap:4px;align-items:center}
+.results-head{padding:8px 0 5px;color:#7d898e;font:9px 'Barlow Condensed';letter-spacing:.6px}
+.results-head span:nth-child(n+3){text-align:right}
+.result-row i{font-style:normal;text-align:right;color:#aeb7b9;font-size:11px}
+.result-row strong{text-align:right;color:var(--red)}
+.result-row em{text-align:right}
+
+/* This weekend: two sessions, and the sprint moves Sunday's target. */
+.weekend{border:1px solid #24343c;border-radius:8px;padding:10px 12px;background:#081218}
+.weekend-rows{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:7px}
+.weekend-rows>div{border-left:2px solid #2f4049;padding-left:9px}
+.weekend-rows>div.done{border-left-color:var(--green)}
+.weekend-rows b{display:block;font:600 10px 'Barlow Condensed';letter-spacing:.9px;color:#939ea2}
+.weekend-rows em{display:block;font:12px 'Barlow Condensed';font-style:normal;color:#d4dbdc;margin-top:2px}
+.weekend-rows strong{color:var(--orange);font:700 15px 'Barlow Condensed'}
+.weekend>small{display:block;margin-top:7px;color:#7b868b;font:10px 'Barlow Condensed'}
+@media(max-width:760px){.weekend-rows{grid-template-columns:1fr}}
+.green{color:var(--green)!important}
+
+/* One target per session — a rider rides a sprint and a race, not "25 points". */
+.session-targets{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.session-target{border:1px solid #46331f;border-radius:7px;padding:9px 11px;background:#12100b}
+.session-target span{display:block;font:600 9px 'Barlow Condensed';letter-spacing:1px;color:#95815f}
+.session-target strong{display:block;font:700 34px 'Barlow Condensed';line-height:36px;letter-spacing:-1px;color:var(--orange)}
+.session-target em{font:11px 'Barlow Condensed';font-style:normal;color:#98a1a4}
+.session-target.done{border-color:#1f4433;background:#0a1512}
+.session-target.done span{color:#6f9683}
+.session-target .done-value{color:var(--green)}
+.split-note{display:block;margin-top:7px;color:#7b868b;font:10px 'Barlow Condensed'}
+@media(max-width:760px){.session-targets{grid-template-columns:1fr 1fr}}
+
+/* M6 — the simulation card. */
+.sim-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:12px}
+.sim-gauge strong{display:block;font:700 62px 'Barlow Condensed';letter-spacing:-2px;line-height:60px;color:var(--red)}
+.sim-gauge strong small{font-size:28px;margin-left:2px}
+.sim-gauge em{display:block;font:11px 'Barlow Condensed';font-style:normal;color:#8d989c;margin-top:6px}
+.prob-bar{position:relative;height:7px;border-radius:4px;background:#1b2a31;margin-top:9px}
+.prob-bar i{position:absolute;top:0;bottom:0;background:#5c2020;border-radius:4px}
+.prob-bar b{position:absolute;top:-3px;width:3px;height:13px;background:var(--red);box-shadow:0 0 7px var(--red)}
+.projected{border-top:1px solid #22323a;margin-top:12px;padding-top:8px}
+.projected p{display:flex;justify-content:space-between;margin:4px 0;font:12px 'Barlow Condensed';color:#a9b2b5}
+.projected p.tracked{color:#fff}
+.projected p.tracked b{color:var(--red)}
+.projected small{display:block;margin-top:6px;color:#788388;font:10px 'Barlow Condensed';line-height:12px}
+.sim-where p:not(.sens-explainer),.sens-rows p{display:grid;grid-template-columns:52px 1fr 44px;align-items:center;gap:7px;margin:5px 0;font:11px 'Barlow Condensed';color:#b3bbbd}
+.sim-where i,.sens-rows i{display:block;height:8px;background:#16232a;border-radius:3px;overflow:hidden}
+.sim-where u,.sens-rows u{display:block;height:100%;background:linear-gradient(90deg,#8d161a,var(--red));text-decoration:none}
+.sim-where u.grey{background:#3b474d}
+.sim-where b,.sens-rows b{text-align:right;color:#dfe4e5}
+.sim-where p.never{color:#8b9498;border-top:1px solid #22323a;padding-top:7px;margin-top:8px}
+.sens-rows{margin-top:4px}
+.sens-rows p.is-min span{color:var(--orange);font-weight:700}
+.sens-rows p.is-min u{background:linear-gradient(90deg,#8a4410,var(--orange))}
+.sim-sensitivity small{display:block;margin-top:8px;color:#8d989c;font:11px 'Barlow Condensed';line-height:14px}
+.sim-sensitivity small strong{color:var(--orange);font-weight:700}
+@media(max-width:1100px){.sim-grid{grid-template-columns:1fr 1fr}.sim-sensitivity{grid-column:1/-1}}
+@media(max-width:760px){.sim-grid{grid-template-columns:1fr}}
+.sens-title{line-height:13px}
+/* Circuit names run long; let the heading wrap rather than overflow the card. */
+.track-head h2.track-name{font-size:19px;line-height:20px;margin-top:3px;letter-spacing:.4px}
+
+/* The simulation card explains itself; dead controls are gone. */
+.sim-explainer{margin:5px 0 0;max-width:460px;color:#8f9a9e;font:12px 'Barlow Condensed';line-height:15px}
+.projection-card .section-title{align-items:flex-start}
+.sync-status{border:1px solid #23343d;border-radius:6px;padding:9px 11px;font:700 10px 'Barlow Condensed';letter-spacing:.7px;color:#d1d6d8}
+.sens-explainer{margin:4px 0 6px;color:#8f9a9e;font:11px 'Barlow Condensed';line-height:14px}
+.sim-sensitivity small strong{color:var(--orange)}
+
+/* The probability turns green only when the title is mathematically settled. */
+.sim-gauge.is-champion strong{color:var(--green)}
+.sim-gauge.is-champion .bound-label{color:var(--green)}
+.sim-gauge.is-champion .prob-bar b{background:var(--green);box-shadow:0 0 7px var(--green)}
+.sim-gauge.is-champion .prob-bar i{background:#1d4a34}
+.sim-gauge.is-out strong,.sim-gauge.is-out .bound-label{color:#7d888d}
+.sim-gauge.is-out .prob-bar b{background:#7d888d;box-shadow:none}
+
+/* The requirement is a per-weekend floor, not a one-off target. Say so. */
+.headline-minimum strong u{text-decoration:none;font:600 20px 'Barlow Condensed';letter-spacing:.5px;color:#c08b52;margin-right:6px;vertical-align:6px}
+.every-weekend{color:var(--orange)!important;font-weight:700;letter-spacing:.4px}
+.requirement-note{margin:7px 0 0;color:#a8b1b4;font:12px 'Barlow Condensed';line-height:15px;border-top:1px solid #33251a;padding-top:7px}
+.requirement-note b{color:#fff;font-weight:600}
+.targets-label{display:block;margin-top:10px}
+
+/* The explainer is prose, not a data row: keep it out of the three-column grid. */
+.sim-where .sens-explainer{display:block;grid-template-columns:none;margin:4px 0 10px;font:11px 'Barlow Condensed';line-height:14px;color:#8f9a9e}
+/* Bars stay readable when the card stacks into one narrow column. */
+.sim-where p:not(.sens-explainer),.sens-rows p{grid-template-columns:minmax(44px,52px) minmax(0,1fr) minmax(40px,46px)}
+.sim-where b,.sens-rows b{white-space:nowrap;font-variant-numeric:tabular-nums}
+.sim-where span,.sens-rows span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
