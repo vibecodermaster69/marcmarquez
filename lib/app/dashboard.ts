@@ -14,6 +14,7 @@ import {
   type ChampionshipStatus
 } from "../engine";
 import { replaySeason } from "../engine/replay";
+import { fetchAfter } from "../ingest/schedule";
 import { gpPositionFor, weekendTarget, waysToScore } from "../points";
 import { buildAssumptions } from "../model/assumptions";
 import { forecast, type Forecast } from "../model/forecast";
@@ -51,6 +52,7 @@ export interface Dashboard {
     flag: string;
     dateStart: string;
   } | null;
+  nextRefreshAt: string | null;
   tracked: {
     name: string;
     points: number;
@@ -109,7 +111,7 @@ export interface Dashboard {
   standings: { position: number; name: string; team: string; points: number; gap: number; isTracked: boolean }[];
   gapTimeline: { round: number; shortName: string; gap: number; points: number }[];
   recentResults: { round: number; shortName: string; flag: string; sprint: string; gp: string; points: number }[];
-  calendar: { round: number; shortName: string; flag: string; state: "complete" | "next" | "upcoming" }[];
+  calendar: { round: number; shortName: string; flag: string; state: "complete" | "partial" | "next" | "upcoming" }[];
 }
 
 function describeMinimum(min: { sprint: number | null; gp: number | null; points: number } | null) {
@@ -177,7 +179,21 @@ export function getDashboard(): Dashboard {
     .filter((e) => e.dateStart.startsWith(String(SEASON)))
     .sort((a, b) => a.round - b.round);
 
-  const nextEvent = calendar.find((e) => e.round === latest.round + 1) ?? null;
+  const allSessions = db.select().from(sessions).all().filter((s) => s.definitive);
+  const storedSessionIds = new Set(db.select({ sessionId: sessionResults.sessionId }).from(sessionResults).all().map((r) => r.sessionId));
+  // Sprint points change the standings, but the round stays active until its
+  // Sunday Grand Prix classification has been ingested.
+  const nextEvent = calendar.find((event) => {
+    const grandPrix = allSessions.find((session) => session.eventId === event.id && session.type === "RAC");
+    return !grandPrix || !storedSessionIds.has(grandPrix.id);
+  }) ?? null;
+  const activeSprint = nextEvent
+    ? allSessions.find((session) => session.eventId === nextEvent.id && session.type === "SPR")
+    : null;
+  const activeGrandPrix = nextEvent
+    ? allSessions.find((session) => session.eventId === nextEvent.id && session.type === "RAC")
+    : null;
+  const activeWeekendIsPartial = Boolean(activeSprint && storedSessionIds.has(activeSprint.id) && activeGrandPrix && !storedSessionIds.has(activeGrandPrix.id));
   const circuitNames = new Map(db.select().from(circuits).all().map((c) => [c.id, c.name]));
 
   // Everyone within realistic reach, not a fixed cast: a rider who climbs into
@@ -213,10 +229,25 @@ export function getDashboard(): Dashboard {
   const remainingEvents = calendar.filter((e) => e.round > latest.round);
 
   // Marc's last four weekends, sprint and Grand Prix.
-  const allSessions = db.select().from(sessions).all().filter((s) => s.definitive);
   const sessionsById = new Map(allSessions.map((s) => [s.id, s]));
   const eventById = new Map(calendar.map((e) => [e.id, e]));
   const myResults = db.select().from(sessionResults).where(eq(sessionResults.riderId, trackedId)).all();
+
+  const nextRefreshAt = [...calendar]
+    .filter((event) => event.round >= (nextEvent?.round ?? latest.round + 1))
+    .flatMap((event) => {
+      const eventSessions = allSessions.filter((session) => session.eventId === event.id);
+      return eventSessions.map((session) => ({
+        event,
+        session,
+        refreshAt: fetchAfter(
+          { id: session.id, type: session.type, dateUtc: session.dateUtc, status: session.status },
+          { dateStart: event.dateStart, dateEnd: event.dateEnd }
+        )
+      }));
+    })
+    .filter((candidate) => candidate.refreshAt.getTime() > Date.now())
+    .sort((a, b) => a.refreshAt.getTime() - b.refreshAt.getTime())[0]?.refreshAt.toISOString() ?? null;
 
   const byRound = new Map<number, { sprint: string; gp: string; points: number }>();
   for (const r of myResults) {
@@ -334,6 +365,7 @@ export function getDashboard(): Dashboard {
           dateStart: nextEvent.dateStart
         }
       : null,
+    nextRefreshAt,
     tracked: {
       name: TRACKED_RIDER_NAME,
       points: tracked.points,
@@ -393,11 +425,22 @@ export function getDashboard(): Dashboard {
         const event = calendar.find((e) => e.round === round)!;
         return { round, shortName: event.shortName, flag: FLAGS[event.shortName] ?? "🏁", sprint: r.sprint, gp: r.gp, points: r.points };
       }),
-    calendar: calendar.map((e) => ({
-      round: e.round,
-      shortName: e.shortName,
-      flag: FLAGS[e.shortName] ?? "🏁",
-      state: e.round < latest.round + 1 ? "complete" : e.round === latest.round + 1 ? "next" : "upcoming"
-    }))
+    calendar: calendar.map((e) => {
+      const activeRound = nextEvent?.round ?? Number.POSITIVE_INFINITY;
+      const followingRound = activeWeekendIsPartial ? activeRound + 1 : activeRound;
+      return {
+        round: e.round,
+        shortName: e.shortName,
+        flag: FLAGS[e.shortName] ?? "🏁",
+        state:
+          e.round < activeRound
+            ? "complete"
+            : e.round === activeRound && activeWeekendIsPartial
+              ? "partial"
+              : e.round === followingRound
+                ? "next"
+                : "upcoming"
+      };
+    })
   };
 }

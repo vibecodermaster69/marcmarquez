@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Dashboard as DashboardData } from "../lib/app/dashboard";
 
 /**
@@ -23,10 +23,58 @@ const STATE_COPY: Record<string, { label: string; blurb: string; tone: string }>
 
 export default function Dashboard({ data }: { data: DashboardData }) {
   const [active, setActive] = useState("Overview");
+  const [now, setNow] = useState(Date.now());
+  const [manualSyncOpen, setManualSyncOpen] = useState(false);
+  const [manualPin, setManualPin] = useState("");
+  const [manualSyncMessage, setManualSyncMessage] = useState("");
+  const [isManualSyncing, setIsManualSyncing] = useState(false);
   const state = STATE_COPY[data.realistic.status] ?? STATE_COPY.LIVE_FIGHT;
   // Green once the title is mathematically his, grey once it cannot be.
   const outcome = data.tracked.clinched ? "is-champion" : data.tracked.eliminated ? "is-out" : "";
   const updated = new Date(data.generatedAt).toUTCString().replace("GMT", "UTC");
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(Date.now()), 60_000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const nextRefresh = data.nextRefreshAt ? new Date(data.nextRefreshAt) : null;
+  const nextUpdateLabel = (() => {
+    if (!nextRefresh) return "next update pending";
+    const diffMinutes = Math.max(0, Math.round((nextRefresh.getTime() - now) / 60_000));
+    const hours = Math.floor(diffMinutes / 60);
+    const minutes = diffMinutes % 60;
+    if (hours > 0) return `${hours}h ${minutes}m`;
+    return `${minutes}m`;
+  })();
+
+  const runManualSync = async () => {
+    setIsManualSyncing(true);
+    setManualSyncMessage("");
+    try {
+      const response = await fetch("/api/manual-sync", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pin: manualPin })
+      });
+      const body = await response.json();
+      if (!response.ok) {
+        setManualSyncMessage(body.error ?? "Manual sync could not start.");
+        return;
+      }
+      if (body.mode === "local") {
+        const ingested = body.report?.ingested?.length ?? 0;
+        setManualSyncMessage(ingested ? "Official results synced. Reloading dashboard…" : "No new official results were available.");
+        if (ingested) window.setTimeout(() => window.location.reload(), 900);
+      } else {
+        setManualSyncMessage("GitHub sync started. The dashboard will refresh after the database commit and deployment complete.");
+      }
+    } catch {
+      setManualSyncMessage("Manual sync could not start. Please try again.");
+    } finally {
+      setIsManualSyncing(false);
+    }
+  };
 
   return (
     <main className="app-shell">
@@ -50,8 +98,14 @@ export default function Dashboard({ data }: { data: DashboardData }) {
 
       <section className="content">
         <header className="topbar">
-          <div><h1>THE PHOENIX EQUATION</h1><p><span className="slash">▰</span> Marc Márquez #93 — Road to the {data.season} MotoGP Title</p><small className="refresh-note">Results refresh 1 hour after each race ends · scheduled in UTC</small></div>
-          <div className="top-meta"><span>{data.season} MotoGP Championship Tracker</span><span className="sync-status">Auto-sync <i /></span></div>
+          <div>
+            <h1>THE PHOENIX EQUATION</h1>
+            <p><span className="slash">▰</span> Marc Márquez #93 — Road to the {data.season} MotoGP Title</p>
+            <small className="refresh-note">
+              Results refresh 1 hour after each race ends · scheduled in UTC · next update in {nextUpdateLabel} UTC
+            </small>
+          </div>
+          <div className="top-meta"><span>{data.season} MotoGP Championship Tracker</span><span className="sync-status">Auto-sync <i /></span><button className="manual-sync-button" type="button" onClick={() => { setManualSyncOpen(true); setManualSyncMessage(""); }}>Sync</button></div>
         </header>
 
         <div className="dashboard-grid">
@@ -118,8 +172,9 @@ export default function Dashboard({ data }: { data: DashboardData }) {
                     <span>SATURDAY · SPRINT</span>
                     {data.weekend.sprintRun ? (
                       <>
+                        <em className="session-achieved">ACHIEVED</em>
                         <strong className="done-value">{data.weekend.sprintResult}</strong>
-                        <em>{data.weekend.sprintPoints} pts banked</em>
+                        <em>TARGET {data.weekend.sprintTarget ?? "—"} · {data.weekend.sprintPoints} pts banked</em>
                       </>
                     ) : (
                       <>
@@ -306,12 +361,13 @@ export default function Dashboard({ data }: { data: DashboardData }) {
             <div className="timeline">
               {data.calendar.map((race) => (
                 <div key={race.round} className={`timeline-item ${race.state}`} title={race.shortName}>
-                  <span className="timeline-dot">{race.state === "complete" ? "✓" : race.state === "next" ? race.round : ""}</span>
+                  <span className="timeline-dot">{race.state === "complete" ? "✓" : race.state === "partial" || race.state === "next" ? race.round : ""}</span>
                 </div>
               ))}
             </div>
             <div className="timeline-legend">
               <span><i className="green-dot" /> Done ({data.calendar.filter((c) => c.state === "complete").length})</span>
+              {data.calendar.some((c) => c.state === "partial") && <span><i className="partial-dot" /> Sprint done (1)</span>}
               <span><i className="red-dot" /> Next (1)</span>
               <span><i className="gray-dot" /> Left ({data.calendar.filter((c) => c.state === "upcoming").length})</span>
             </div>
@@ -353,6 +409,22 @@ export default function Dashboard({ data }: { data: DashboardData }) {
           <a className="creator-credit" href="https://x.com/RaceDayIndia" target="_blank" rel="noreferrer">Developed by Race Day India ↗</a>
         </footer>
       </section>
+      {manualSyncOpen && (
+        <div className="modal-backdrop" role="presentation">
+          <section className="modal manual-sync-modal" role="dialog" aria-modal="true" aria-labelledby="manual-sync-title">
+            <span className="eyebrow">AUTHORIZED ACCESS</span>
+            <h2 id="manual-sync-title">Manual data sync</h2>
+            <p>Only authorized personnel can run a manual sync. Enter the PIN, or wait for the scheduled auto-sync.</p>
+            <label htmlFor="manual-sync-pin">Authorization PIN</label>
+            <input id="manual-sync-pin" type="password" value={manualPin} onChange={(event) => setManualPin(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && manualPin && !isManualSyncing) void runManualSync(); }} autoFocus />
+            {manualSyncMessage && <p className="manual-sync-message" aria-live="polite">{manualSyncMessage}</p>}
+            <div className="manual-sync-actions">
+              <button type="button" className="manual-cancel" onClick={() => setManualSyncOpen(false)} disabled={isManualSyncing}>Cancel</button>
+              <button type="button" className="manual-confirm" onClick={() => void runManualSync()} disabled={!manualPin || isManualSyncing}>{isManualSyncing ? "Syncing…" : "Sync now"}</button>
+            </div>
+          </section>
+        </div>
+      )}
     </main>
   );
 }

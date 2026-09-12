@@ -38,7 +38,7 @@ const DAY = 86_400_000;
 export async function syncNow(
   db: Db,
   client: MotoGpClient,
-  options: { year?: number; now?: Date } = {}
+  options: { year?: number; now?: Date; force?: boolean } = {}
 ): Promise<SyncReport> {
   const year = options.year ?? SEASON;
   const now = options.now ?? new Date();
@@ -108,7 +108,7 @@ export async function syncNow(
         }
 
         // The soft gate: give the classification time to settle before reading it.
-        if (!isDue(scheduled, eventDates, now)) {
+        if (!options.force && !isDue(scheduled, eventDates, now)) {
           report.waiting.push(`${target} — finished, waiting out the ${fetchAfter(scheduled, eventDates).toISOString()} settle window`);
           continue;
         }

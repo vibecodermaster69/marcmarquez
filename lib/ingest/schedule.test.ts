@@ -53,7 +53,7 @@ describe("the one-hour gap after a race ends", () => {
   });
 
   it("is not due one minute before the window closes", () => {
-    expect(isDue(finishedRace, misano, new Date("2026-09-13T17:14:00Z"))).toBe(false);
+    expect(isDue(finishedRace, misano, new Date("2026-09-13T16:14:00Z"))).toBe(false);
   });
 
   it("is due once the one hour has passed", () => {

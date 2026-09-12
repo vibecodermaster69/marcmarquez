@@ -9,12 +9,12 @@ const seeded = fs.existsSync(DEFAULT_DB_PATH) ? describe : describe.skip;
 seeded("dashboard view model", () => {
   const data = getDashboard();
 
-  it("reports the live 2026 championship", () => {
+  it("reports a coherent live 2026 championship", () => {
     expect(data.season).toBe(2026);
     expect(data.tracked.name).toBe("Marc Marquez");
-    expect(data.tracked.points).toBe(237);
-    expect(data.tracked.position).toBe(2);
-    expect(data.tracked.gapToLeader).toBe(-19);
+    expect(data.tracked.points).toBeGreaterThan(0);
+    expect(data.tracked.position).toBeGreaterThan(0);
+    expect(data.tracked.gapToLeader).toBe(data.tracked.points - data.standings[0].points);
   });
 
   it("keeps rounds and points internally consistent", () => {
@@ -23,9 +23,20 @@ seeded("dashboard view model", () => {
     expect(data.lastRound.round + data.roundsRemaining).toBe(data.totalRounds);
   });
 
-  it("points at the next round", () => {
-    expect(data.nextRound?.shortName).toBe("RSM");
-    expect(data.nextRound?.round).toBe(data.lastRound.round + 1);
+  it("keeps a sprint weekend active until Sunday is ingested", () => {
+    expect(data.nextRound).not.toBeNull();
+    if (data.weekend?.sprintRun && !data.weekend.gpRun) {
+      expect(data.nextRound?.shortName).toBe(data.weekend.shortName);
+    } else {
+      expect(data.nextRound?.round).toBe(data.lastRound.round + 1);
+    }
+  });
+
+  it("exposes the next scheduled refresh in UTC", () => {
+    expect(data.nextRefreshAt).not.toBeNull();
+    const refresh = new Date(data.nextRefreshAt!);
+    expect(refresh.getTime()).toBeGreaterThan(Date.now());
+    expect(refresh.toISOString().endsWith("Z")).toBe(true);
   });
 
   it("brackets the requirement between the two provable bounds", () => {

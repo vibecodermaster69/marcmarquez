@@ -5,11 +5,12 @@ import { SEASON } from "../lib/config";
 
 /**
  * One unattended sync pass. Safe to run on any schedule, as often as you like.
- * Usage: npm run sync [year]
+ * Usage: npm run sync [year] [--force]
  */
 async function main() {
   const year = Number(process.argv[2]) || SEASON;
-  const report = await syncNow(createDb(), new MotoGpClient(), { year });
+  const force = process.argv.includes("--force");
+  const report = await syncNow(createDb(), new MotoGpClient(), { year, force });
 
   console.log(`\n  SYNC ${report.ranAt}`);
   console.log(`  events in window: ${report.eventsInWindow}`);
