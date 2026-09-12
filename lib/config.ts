@@ -10,13 +10,13 @@ export const SESSION_DURATION_MINUTES: Record<"SPR" | "RAC", number> = { SPR: 40
 
 /**
  * The gap between a race ENDING and the results being fetched.
- * Two hours: long enough for the classification to be final and for any
- * post-race penalty to be applied before we read it.
+ * One hour: enough buffer for the official classification to be published
+ * while keeping the dashboard useful soon after the session ends.
  *
  * The sync job is idempotent and self-healing, so this only affects how soon a
  * result is picked up, never whether it is correct.
  */
-export const RESULTS_DELAY_MINUTES = 120;
+export const RESULTS_DELAY_MINUTES = 60;
 
 /** How far back the sync job looks for sessions it has not yet ingested. */
 export const SYNC_WINDOW_DAYS = 4;

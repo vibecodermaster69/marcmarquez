@@ -130,6 +130,6 @@ HTML scraping. Ingest is idempotent (upsert on session + rider), validated
 (published points must match the position they earn), and self-healing (a missed
 sync pass is picked up by the next one).
 
-Results are fetched **two hours after each race is expected to end**, never on a
+Results are fetched **one hour after each race is expected to end**, never on a
 fixed clock — most 2026 rounds settle around 22:45–23:10 IST, and Qatar not until
 04:45 IST the following morning.

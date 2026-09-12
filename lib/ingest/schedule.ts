@@ -54,7 +54,7 @@ export function estimatedEnd(session: ScheduledSession, event: ScheduledEvent): 
 
 /**
  * The earliest moment this session's results should be fetched:
- * two hours after the race is expected to end.
+ * one hour after the race is expected to end.
  */
 export function fetchAfter(session: ScheduledSession, event: ScheduledEvent): Date {
   return new Date(estimatedEnd(session, event).getTime() + RESULTS_DELAY_MINUTES * MINUTE);

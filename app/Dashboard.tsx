@@ -50,7 +50,7 @@ export default function Dashboard({ data }: { data: DashboardData }) {
 
       <section className="content">
         <header className="topbar">
-          <div><h1>THE PHOENIX EQUATION</h1><p><span className="slash">▰</span> Marc Márquez #93 — Road to the {data.season} MotoGP Title</p></div>
+          <div><h1>THE PHOENIX EQUATION</h1><p><span className="slash">▰</span> Marc Márquez #93 — Road to the {data.season} MotoGP Title</p><small className="refresh-note">Results refresh 1 hour after each race ends · scheduled in UTC</small></div>
           <div className="top-meta"><span>{data.season} MotoGP Championship Tracker</span><span className="sync-status">Auto-sync <i /></span></div>
         </header>
 

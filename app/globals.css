@@ -180,3 +180,5 @@
 .sim-where span,.sens-rows span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* Creator attribution */
 .creator-credit{color:#aeb8bb;font:11px 'Barlow Condensed';letter-spacing:.4px;text-decoration:none;white-space:nowrap}.creator-credit:hover{color:var(--red)}
+/* Public refresh policy shown below the dashboard title. */
+.refresh-note{display:block;margin-top:5px;color:#7f8d92;font:11px 'Barlow Condensed';letter-spacing:.25px}

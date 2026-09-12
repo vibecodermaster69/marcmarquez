@@ -6,7 +6,7 @@ import { estimatedEnd, fetchAfter, inZone } from "../lib/ingest/schedule";
 
 /**
  * Prints the refresh schedule for every remaining scoring session.
- * Verifies that the 2-hour post-race gap lands sensibly in every time zone the
+ * Verifies that the 1-hour post-race gap lands sensibly in every time zone the
  * calendar visits — the check a fixed 8pm IST cron cannot pass on its own.
  */
 const IST = "Asia/Kolkata";
@@ -16,7 +16,7 @@ const calendar = db.select().from(events).where(eq(events.seasonId, season.id)).
 const all = db.select().from(sessions).all().filter((s) => s.definitive);
 const now = new Date();
 
-console.log(`\n  REFRESH SCHEDULE — 2 hours after each race ends\n`);
+console.log(`\n  REFRESH SCHEDULE — 1 hour after each race ends\n`);
 console.log(`  RND  EVENT  SES   RACE ENDS (IST)              FETCH AT (IST)               FETCH AT (UTC)`);
 
 for (const event of calendar) {

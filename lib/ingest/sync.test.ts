@@ -21,7 +21,7 @@ const marcPoints = (db: Db) =>
   db.select().from(sessionResults).where(eq(sessionResults.riderId, MARC.id)).all().reduce((n, r) => n + r.points, 0);
 
 describe("syncNow", () => {
-  it("ingests a finished session once the two-hour window has passed", async () => {
+  it("ingests a finished session once the one-hour window has passed", async () => {
     const { db, client } = fresh();
     const report = await syncNow(db, client, { now: AFTER_SETTLE });
 

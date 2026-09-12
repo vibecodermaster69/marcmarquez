@@ -36,16 +36,16 @@ describe("effectiveStart", () => {
   });
 });
 
-describe("the two-hour gap after a race ends", () => {
+describe("the one-hour gap after a race ends", () => {
   it("estimates the end from the race duration", () => {
     const end = estimatedEnd(finishedRace, misano);
     expect(end.getTime() - new Date(finishedRace.dateUtc).getTime()).toBe(SESSION_DURATION_MINUTES.RAC * 60_000);
   });
 
-  it("fetches exactly two hours after the estimated end", () => {
+  it("fetches exactly one hour after the estimated end", () => {
     const gap = fetchAfter(finishedRace, misano).getTime() - estimatedEnd(finishedRace, misano).getTime();
     expect(gap).toBe(RESULTS_DELAY_MINUTES * 60_000);
-    expect(RESULTS_DELAY_MINUTES).toBe(120);
+    expect(RESULTS_DELAY_MINUTES).toBe(60);
   });
 
   it("is not due while the race is still running", () => {
@@ -56,8 +56,8 @@ describe("the two-hour gap after a race ends", () => {
     expect(isDue(finishedRace, misano, new Date("2026-09-13T17:14:00Z"))).toBe(false);
   });
 
-  it("is due once the two hours have passed", () => {
-    // 14:00 start + 75 min race + 120 min gap = 17:15
+  it("is due once the one hour has passed", () => {
+    // 14:00 start + 75 min race + 60 min gap = 16:15
     expect(isDue(finishedRace, misano, new Date("2026-09-13T17:15:00Z"))).toBe(true);
   });
 
