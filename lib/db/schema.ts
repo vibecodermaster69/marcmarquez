@@ -179,6 +179,30 @@ export const championshipSnapshots = sqliteTable(
   })
 );
 
+/**
+ * The target agreed before a Grand Prix weekend begins.  Unlike a live
+ * requirement, this is never recalculated after Saturday or Sunday results
+ * arrive: it lets the dashboard honestly show target versus achievement.
+ */
+export const weekendTargetPlans = sqliteTable(
+  "weekend_target_plans",
+  {
+    eventId: text("event_id")
+      .primaryKey()
+      .references(() => events.id),
+    seasonId: text("season_id")
+      .notNull()
+      .references(() => seasons.id),
+    targetPoints: integer("target_points").notNull(),
+    sprintTarget: integer("sprint_target"),
+    gpTarget: integer("gp_target"),
+    createdAt: text("created_at")
+      .notNull()
+      .default(sql`CURRENT_TIMESTAMP`)
+  },
+  (t) => ({ bySeason: index("weekend_target_plans_season_idx").on(t.seasonId) })
+);
+
 export const syncLog = sqliteTable("sync_log", {
   id: text("id").primaryKey(),
   ranAt: text("ran_at")

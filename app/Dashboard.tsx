@@ -165,7 +165,7 @@ export default function Dashboard({ data }: { data: DashboardData }) {
               {data.weekend && (
                 <>
                 <span className="bound-label targets-label">
-                  ONE WAY TO SCORE {data.realistic.requiredNow} THIS WEEKEND
+                  {data.weekend.shortName} TARGET · ONE WAY TO SCORE {data.weekend.target} THIS WEEKEND
                 </span>
                 <div className="session-targets">
                   <div className={`session-target ${data.weekend.sprintRun ? "done" : ""}`}>
@@ -205,6 +205,22 @@ export default function Dashboard({ data }: { data: DashboardData }) {
                   ? "Saturday is banked — Sunday's target has moved to cover the rest."
                   : "Saturday's result will move Sunday's target."}
               </small>
+              {data.nextWeekend && (
+                <div className={`next-weekend-target ${data.nextWeekend.target === null ? "locked" : ""}`}>
+                  <span className="bound-label">TARGET FOR {data.nextWeekend.shortName} GP</span>
+                  {data.nextWeekend.target === null ? (
+                    <p>Unlocks after the official {data.weekend?.shortName} Sunday result.</p>
+                  ) : (
+                    <>
+                      <strong>{data.nextWeekend.target}<small> PTS</small></strong>
+                      <div className="session-targets">
+                        <div className="session-target"><span>SATURDAY · SPRINT</span><strong>{data.nextWeekend.sprintTarget ?? "ANY"}</strong><em>target</em></div>
+                        <div className="session-target"><span>SUNDAY · RACE</span><strong>{data.nextWeekend.gpTarget ?? "ANY"}</strong><em>target</em></div>
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
             </div>
 
             <div className="bounds">

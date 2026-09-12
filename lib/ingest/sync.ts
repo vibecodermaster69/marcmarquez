@@ -6,6 +6,7 @@ import { isScoringSession, toRounds, type MotoGpClient } from "../motogp/client"
 import { ingestSession, isAlreadyIngested, log, resolveDefinitiveSessions, upsertEvent, upsertScoringSession, type ValidationIssue } from "./ingest";
 import { fetchAfter, isDue } from "./schedule";
 import { writeSnapshot } from "./snapshot";
+import { ensureWeekendPlan } from "./weekend-plan";
 
 export interface SyncReport {
   ranAt: string;
@@ -84,6 +85,12 @@ export async function syncNow(
       const apiSessions = (await client.sessions(event.id, categoryId)).filter((s) => isScoringSession(s.type));
       const resolved = await resolveDefinitiveSessions(client, apiSessions);
 
+      // Capture the original weekend target before a newly published result can
+      // change the standings and therefore the live requirement.
+      if (resolved.some(({ session, definitive }) => definitive && !isAlreadyIngested(db, session.id))) {
+        ensureWeekendPlan(db, year, event.id);
+      }
+
       for (const { session, definitive } of resolved) {
         upsertScoringSession(db, event.id, session, definitive);
         const target = `${year} ${event.short_name} ${session.type}`;
@@ -126,6 +133,14 @@ export async function syncNow(
         .all()
         .find((s) => report.ingested.some((t) => t.endsWith(s.type)))?.id ?? null;
       report.snapshotWritten = writeSnapshot(db, year, lastSessionId);
+      // Sunday's official classification unlocks a fresh, durable plan for the
+      // following Grand Prix.
+      const calendar = db.select().from(events).where(eq(events.seasonId, season.id)).all().sort((a, b) => a.round - b.round);
+      const completedGrandPrixEventIds = new Set(
+        db.select().from(sessions).all().filter((s) => s.definitive && s.type === "RAC" && isAlreadyIngested(db, s.id)).map((s) => s.eventId)
+      );
+      const next = calendar.find((event) => !completedGrandPrixEventIds.has(event.id));
+      if (next) ensureWeekendPlan(db, year, next.id);
     }
 
     log(db, `${year} sync`, "OK", report.ingested.length, report.ingested.join(", ") || "nothing due");

@@ -19,7 +19,9 @@ seeded("dashboard view model", () => {
 
   it("keeps rounds and points internally consistent", () => {
     expect(data.pointsAvailable).toBe(data.roundsRemaining * MAX_WEEKEND_POINTS);
-    expect(data.calendar.filter((c) => c.state !== "complete")).toHaveLength(data.roundsRemaining);
+    // A sprint changes the standings but does not complete its Grand Prix.
+    const partial = data.calendar.filter((c) => c.state === "partial").length;
+    expect(data.calendar.filter((c) => c.state !== "complete")).toHaveLength(data.roundsRemaining + partial);
     expect(data.lastRound.round + data.roundsRemaining).toBe(data.totalRounds);
   });
 
@@ -60,8 +62,8 @@ seeded("dashboard view model", () => {
   });
 
   it("shows real recent results, most recent first", () => {
-    expect(data.recentResults[0].shortName).toBe("ARA");
-    expect(data.recentResults[0].points).toBe(37);
+    expect(data.recentResults[0].shortName).toBe("RSM");
+    expect(data.recentResults[0].points).toBe(12);
     const rounds = data.recentResults.map((r) => r.round);
     expect([...rounds].sort((a, b) => b - a)).toEqual(rounds);
     for (const r of data.recentResults) expect(r.points).toBeLessThanOrEqual(MAX_WEEKEND_POINTS);
@@ -120,13 +122,16 @@ seeded("dashboard view model", () => {
   it("splits the coming weekend into its two sessions", () => {
     expect(data.weekend).not.toBeNull();
     expect(data.weekend!.shortName).toBe("RSM");
-    // Misano has not run, so neither session is banked yet.
-    expect(data.weekend!.sprintRun).toBe(false);
+    // Misano's official Sprint is in; Sunday remains the live requirement.
+    expect(data.weekend!.sprintRun).toBe(true);
     expect(data.weekend!.gpRun).toBe(false);
-    expect(data.weekend!.sprintPoints).toBe(0);
-    // With nothing banked, Sunday still owes the whole weekend target.
-    expect(data.weekend!.remainingForGp).toBe(data.weekend!.target);
+    expect(data.weekend!.sprintPoints).toBe(12);
+    expect(data.weekend!.sprintTarget).toBe("P2");
+    expect(data.weekend!.remainingForGp).toBe(13);
     expect(data.weekend!.target).toBe(data.realistic.requiredNow);
+    // The following weekend must not publish a target before Sunday settles.
+    expect(data.nextWeekend?.shortName).toBe("AUT");
+    expect(data.nextWeekend?.target).toBeNull();
   });
 });
 

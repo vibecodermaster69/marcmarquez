@@ -118,6 +118,11 @@
 .session-target.done span{color:#6f9683}
 .session-target .done-value{color:var(--green)}
 .split-note{display:block;margin-top:7px;color:#7b868b;font:10px 'Barlow Condensed'}
+.next-weekend-target{margin-top:13px;padding-top:11px;border-top:1px solid #46331f}
+.next-weekend-target>strong{font-size:38px;line-height:40px}
+.next-weekend-target>p{margin:7px 0 0;color:#9ba5a8;font:12px 'Barlow Condensed';line-height:15px}
+.next-weekend-target.locked{opacity:.82}
+.next-weekend-target.locked .bound-label{color:#8b959a}
 @media(max-width:760px){.session-targets{grid-template-columns:1fr 1fr}}
 
 /* M6 — the simulation card. */

@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { createDb } from "../db";
 import { CONTENDER_DEPTH, SEASON, TRACKED_RIDER_NAME } from "../config";
-import { circuits, events, riders, sessionResults, sessions } from "../db/schema";
+import { circuits, events, riders, sessionResults, sessions, weekendTargetPlans } from "../db/schema";
 import {
   RIVALS_MAX,
   RIVALS_ZERO,
@@ -107,6 +107,8 @@ export interface Dashboard {
     remainingForGp: number;
     gpTarget: string | null;
   } | null;
+  /** The following GP is deliberately locked until the current Sunday result is official. */
+  nextWeekend: { shortName: string; target: number | null; sprintTarget: string | null; gpTarget: string | null } | null;
   earliestCoronation: { round: number; shortName: string; flag: string } | null;
   standings: { position: number; name: string; team: string; points: number; gap: number; isTracked: boolean }[];
   gapTimeline: { round: number; shortName: string; gap: number; points: number }[];
@@ -181,6 +183,7 @@ export function getDashboard(): Dashboard {
 
   const allSessions = db.select().from(sessions).all().filter((s) => s.definitive);
   const storedSessionIds = new Set(db.select({ sessionId: sessionResults.sessionId }).from(sessionResults).all().map((r) => r.sessionId));
+  const targetPlans = new Map(db.select().from(weekendTargetPlans).all().map((plan) => [plan.eventId, plan]));
   // Sprint points change the standings, but the round stays active until its
   // Sunday Grand Prix classification has been ingested.
   const nextEvent = calendar.find((event) => {
@@ -194,6 +197,16 @@ export function getDashboard(): Dashboard {
     ? allSessions.find((session) => session.eventId === nextEvent.id && session.type === "RAC")
     : null;
   const activeWeekendIsPartial = Boolean(activeSprint && storedSessionIds.has(activeSprint.id) && activeGrandPrix && !storedSessionIds.has(activeGrandPrix.id));
+  const lastCompletedEvent = [...calendar].reverse().find((event) => {
+    const grandPrix = allSessions.find((session) => session.eventId === event.id && session.type === "RAC");
+    return Boolean(grandPrix && storedSessionIds.has(grandPrix.id));
+  }) ?? null;
+  const activeHasResult = Boolean(nextEvent && allSessions.some((session) => session.eventId === nextEvent.id && storedSessionIds.has(session.id)));
+  // Before/during a weekend show its live card. Once Sunday is official, keep
+  // that completed card on screen and reveal the following GP underneath.
+  const displayEvent = nextEvent && (!lastCompletedEvent || activeHasResult || !activeGrandPrix)
+    ? nextEvent
+    : lastCompletedEvent;
   const circuitNames = new Map(db.select().from(circuits).all().map((c) => [c.id, c.name]));
 
   // Everyone within realistic reach, not a fixed cast: a rider who climbs into
@@ -292,8 +305,8 @@ export function getDashboard(): Dashboard {
   }).requiredNow;
 
   let weekend: Dashboard["weekend"] = null;
-  if (nextEvent) {
-    const weekendSessions = allSessions.filter((s) => s.eventId === nextEvent.id);
+  if (displayEvent) {
+    const weekendSessions = allSessions.filter((s) => s.eventId === displayEvent.id);
     const sprint = weekendSessions.find((s) => s.type === "SPR") ?? null;
     const gp = weekendSessions.find((s) => s.type === "RAC") ?? null;
     const myRow = (sessionId: string | undefined) =>
@@ -302,14 +315,20 @@ export function getDashboard(): Dashboard {
     const sprintRow = myRow(sprint?.id);
     const gpRow = myRow(gp?.id);
     const sprintPoints = sprintRow?.points ?? 0;
-    // Once the sprint has run, Sunday carries whatever the weekend still owes.
-    const remainingForGp = Math.max(0, paceTarget - sprintPoints);
     // One target per session, split so both days ask for a similar level of result.
-    const split = weekendTarget(paceTarget);
+    const plan = targetPlans.get(displayEvent.id);
+    // Old databases do not yet have a saved plan for the in-progress weekend.
+    // The live calculation is a safe one-time fallback; future weekends are
+    // written by sync before any result changes the state.
+    const target = plan?.targetPoints ?? paceTarget;
+    const split = plan
+      ? { sprint: plan.sprintTarget, gp: plan.gpTarget }
+      : weekendTarget(target);
+    const remainingForGp = Math.max(0, target - sprintPoints);
 
     weekend = {
-      shortName: nextEvent.shortName,
-      target: paceTarget,
+      shortName: displayEvent.shortName,
+      target,
       sprintRun: sprintRow !== null,
       sprintResult: sprintRow ? (sprintRow.position === null ? "DNF" : `P${sprintRow.position}`) : null,
       sprintPoints,
@@ -328,6 +347,19 @@ export function getDashboard(): Dashboard {
     };
   }
 
+  const followingEvent = displayEvent
+    ? calendar.find((event) => event.round === displayEvent.round + 1) ?? null
+    : null;
+  const followingPlan = followingEvent ? targetPlans.get(followingEvent.id) : null;
+  const nextWeekend: Dashboard["nextWeekend"] = followingEvent
+    ? {
+        shortName: followingEvent.shortName,
+        target: weekend?.gpRun ? (followingPlan?.targetPoints ?? paceTarget) : null,
+        sprintTarget: weekend?.gpRun ? (followingPlan?.sprintTarget == null ? null : `P${followingPlan.sprintTarget}`) : null,
+        gpTarget: weekend?.gpRun ? (followingPlan?.gpTarget == null ? null : `P${followingPlan.gpTarget}`) : null
+      }
+    : null;
+
   const currentPoints = new Map(state.standings.map((s) => [s.riderId, s.points]));
   const currentWins = new Map(state.standings.map((s) => [s.riderId, s.positionCounts[0] ?? 0]));
   const sim: Forecast = forecast(db, SEASON, trackedId, rivalIds, latest.round, currentPoints, currentWins);
@@ -335,6 +367,7 @@ export function getDashboard(): Dashboard {
   return {
     season: SEASON,
     weekend,
+    nextWeekend,
     simulation: {
       runs: sim.runs,
       probability: sim.probability,

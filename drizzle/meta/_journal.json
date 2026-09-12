@@ -8,6 +8,13 @@
       "when": 1788161371709,
       "tag": "0000_sour_tyger_tiger",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1789231996176,
+      "tag": "0001_blushing_namora",
+      "breakpoints": true
     }
   ]
 }
