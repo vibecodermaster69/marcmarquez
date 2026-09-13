@@ -73,7 +73,7 @@ export default function Dashboard({ data }: { data: DashboardData }) {
               Results refresh 1 hour after each race ends · scheduled in UTC · next update in {nextUpdateLabel} UTC
             </small>
           </div>
-          <div className="top-meta"><span>{data.season} MotoGP Championship Tracker</span><span className="sync-status">Auto-sync <i /></span><a className="manual-sync-button" href="https://github.com/vibecodermaster69/marcmarquez/actions/workflows/sync.yml" target="_blank" rel="noreferrer">Run sync on GitHub</a></div>
+          <div className="top-meta"><span>{data.season} MotoGP Championship Tracker</span><span className="sync-status">Auto-sync <i /></span></div>
         </header>
 
         <div className="dashboard-grid">

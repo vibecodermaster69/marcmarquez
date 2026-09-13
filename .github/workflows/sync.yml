@@ -11,17 +11,6 @@ name: sync
 # so an extra run costs one HTTP request and changes nothing.
 
 on:
-  workflow_dispatch:
-    inputs:
-      pin:
-        description: "Authorization PIN required to run a manual sync."
-        required: true
-        type: string
-      force:
-        description: "Bypass the post-race wait; MotoGP must still report the session FINISHED."
-        required: false
-        default: false
-        type: boolean
   schedule:
     # R14 RSM SPR — Sat 12 Sept, 22:10 IST
     - cron: "40 16 12 9 *"
@@ -75,20 +64,6 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Authorize manual run
-        if: github.event_name == 'workflow_dispatch'
-        env:
-          ENTERED_PIN: ${{ inputs.pin }}
-          EXPECTED_PIN: ${{ secrets.MANUAL_SYNC_PIN }}
-        run: |
-          if [ -z "$EXPECTED_PIN" ]; then
-            echo "::error::GitHub Actions secret MANUAL_SYNC_PIN is not configured."
-            exit 1
-          fi
-          if [ "$ENTERED_PIN" != "$EXPECTED_PIN" ]; then
-            echo "::error::Invalid authorization PIN."
-            exit 1
-          fi
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
@@ -96,12 +71,7 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Ingest any finished session
-        run: |
-          if [ "${{ inputs.force }}" = "true" ]; then
-            npm run sync -- --force
-          else
-            npm run sync
-          fi
+        run: npm run sync
       - name: Verify the championship still reconciles with motogp.com
         run: npm run verify
       - name: Commit new results
