@@ -24,10 +24,6 @@ const STATE_COPY: Record<string, { label: string; blurb: string; tone: string }>
 export default function Dashboard({ data }: { data: DashboardData }) {
   const [active, setActive] = useState("Overview");
   const [now, setNow] = useState(Date.now());
-  const [manualSyncOpen, setManualSyncOpen] = useState(false);
-  const [manualPin, setManualPin] = useState("");
-  const [manualSyncMessage, setManualSyncMessage] = useState("");
-  const [isManualSyncing, setIsManualSyncing] = useState(false);
   const state = STATE_COPY[data.realistic.status] ?? STATE_COPY.LIVE_FIGHT;
   // Green once the title is mathematically his, grey once it cannot be.
   const outcome = data.tracked.clinched ? "is-champion" : data.tracked.eliminated ? "is-out" : "";
@@ -47,34 +43,6 @@ export default function Dashboard({ data }: { data: DashboardData }) {
     if (hours > 0) return `${hours}h ${minutes}m`;
     return `${minutes}m`;
   })();
-
-  const runManualSync = async () => {
-    setIsManualSyncing(true);
-    setManualSyncMessage("");
-    try {
-      const response = await fetch("/api/manual-sync", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pin: manualPin })
-      });
-      const body = await response.json();
-      if (!response.ok) {
-        setManualSyncMessage(body.error ?? "Manual sync could not start.");
-        return;
-      }
-      if (body.mode === "local") {
-        const ingested = body.report?.ingested?.length ?? 0;
-        setManualSyncMessage(ingested ? "Official results synced. Reloading dashboard…" : "No new official results were available.");
-        if (ingested) window.setTimeout(() => window.location.reload(), 900);
-      } else {
-        setManualSyncMessage("GitHub sync started. The dashboard will refresh after the database commit and deployment complete.");
-      }
-    } catch {
-      setManualSyncMessage("Manual sync could not start. Please try again.");
-    } finally {
-      setIsManualSyncing(false);
-    }
-  };
 
   return (
     <main className="app-shell">
@@ -105,7 +73,7 @@ export default function Dashboard({ data }: { data: DashboardData }) {
               Results refresh 1 hour after each race ends · scheduled in UTC · next update in {nextUpdateLabel} UTC
             </small>
           </div>
-          <div className="top-meta"><span>{data.season} MotoGP Championship Tracker</span><span className="sync-status">Auto-sync <i /></span><button className="manual-sync-button" type="button" onClick={() => { setManualSyncOpen(true); setManualSyncMessage(""); }}>Sync</button></div>
+          <div className="top-meta"><span>{data.season} MotoGP Championship Tracker</span><span className="sync-status">Auto-sync <i /></span><a className="manual-sync-button" href="https://github.com/vibecodermaster69/marcmarquez/actions/workflows/sync.yml" target="_blank" rel="noreferrer">Run sync on GitHub</a></div>
         </header>
 
         <div className="dashboard-grid">
@@ -425,22 +393,6 @@ export default function Dashboard({ data }: { data: DashboardData }) {
           <a className="creator-credit" href="https://x.com/RaceDayIndia" target="_blank" rel="noreferrer">Developed by Race Day India ↗</a>
         </footer>
       </section>
-      {manualSyncOpen && (
-        <div className="modal-backdrop" role="presentation">
-          <section className="modal manual-sync-modal" role="dialog" aria-modal="true" aria-labelledby="manual-sync-title">
-            <span className="eyebrow">AUTHORIZED ACCESS</span>
-            <h2 id="manual-sync-title">Manual data sync</h2>
-            <p>Only authorized personnel can run a manual sync. Enter the PIN, or wait for the scheduled auto-sync.</p>
-            <label htmlFor="manual-sync-pin">Authorization PIN</label>
-            <input id="manual-sync-pin" type="password" value={manualPin} onChange={(event) => setManualPin(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && manualPin && !isManualSyncing) void runManualSync(); }} autoFocus />
-            {manualSyncMessage && <p className="manual-sync-message" aria-live="polite">{manualSyncMessage}</p>}
-            <div className="manual-sync-actions">
-              <button type="button" className="manual-cancel" onClick={() => setManualSyncOpen(false)} disabled={isManualSyncing}>Cancel</button>
-              <button type="button" className="manual-confirm" onClick={() => void runManualSync()} disabled={!manualPin || isManualSyncing}>{isManualSyncing ? "Syncing…" : "Sync now"}</button>
-            </div>
-          </section>
-        </div>
-      )}
     </main>
   );
 }
