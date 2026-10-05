@@ -21,9 +21,9 @@ seeded("Layer 2 assumptions on the real championship", () => {
 
   it("covers every remaining round", () => {
     expect(assumptions.circuits).toHaveLength(state.roundsRemaining);
-    expect(assumptions.circuits.map((c) => c.shortName)).toEqual([
-      "RSM", "AUT", "JPN", "INA", "AUS", "MAL", "QAT", "POR", "VAL"
-    ]);
+    expect(assumptions.circuits.map((c) => c.round)).toEqual(
+      Array.from({ length: state.roundsRemaining }, (_, i) => latest.round + i + 1)
+    );
   });
 
   it("never assumes more than a perfect weekend", () => {

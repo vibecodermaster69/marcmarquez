@@ -11,6 +11,7 @@ name: sync
 # so an extra run costs one HTTP request and changes nothing.
 
 on:
+  workflow_dispatch:
   schedule:
     # R14 RSM SPR — Sat 12 Sept, 22:10 IST
     - cron: "40 16 12 9 *"

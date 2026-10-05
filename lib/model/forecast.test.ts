@@ -33,9 +33,9 @@ seeded("forecast on the real championship", () => {
 
   it("covers every remaining round in the clinch distribution", () => {
     expect(f.clinchByRound).toHaveLength(state.roundsRemaining);
-    expect(f.clinchByRound.map((c) => c.shortName)).toEqual([
-      "RSM", "AUT", "JPN", "INA", "AUS", "MAL", "QAT", "POR", "VAL"
-    ]);
+    expect(f.clinchByRound.map((c) => c.round)).toEqual(
+      Array.from({ length: state.roundsRemaining }, (_, i) => latest.round + i + 1)
+    );
     const total = f.clinchByRound.reduce((a, c) => a + c.probability, 0);
     expect(total).toBeCloseTo(f.probability, 10);
   });
