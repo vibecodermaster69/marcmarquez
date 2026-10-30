@@ -184,11 +184,15 @@ export function getDashboard(): Dashboard {
   const allSessions = db.select().from(sessions).all().filter((s) => s.definitive);
   const storedSessionIds = new Set(db.select({ sessionId: sessionResults.sessionId }).from(sessionResults).all().map((r) => r.sessionId));
   const targetPlans = new Map(db.select().from(weekendTargetPlans).all().map((plan) => [plan.eventId, plan]));
+  const grandPrixIsClosed = (session: (typeof allSessions)[number] | undefined) =>
+    Boolean(session && (session.status === "CANCELLED" || storedSessionIds.has(session.id)));
   // Sprint points change the standings, but the round stays active until its
-  // Sunday Grand Prix classification has been ingested.
+  // Sunday Grand Prix classification has been ingested. A cancelled Grand Prix
+  // is also closed: its Sprint points remain valid, but it cannot keep the
+  // next round's target hidden.
   const nextEvent = calendar.find((event) => {
     const grandPrix = allSessions.find((session) => session.eventId === event.id && session.type === "RAC");
-    return !grandPrix || !storedSessionIds.has(grandPrix.id);
+    return !grandPrixIsClosed(grandPrix);
   }) ?? null;
   const activeSprint = nextEvent
     ? allSessions.find((session) => session.eventId === nextEvent.id && session.type === "SPR")
@@ -196,15 +200,18 @@ export function getDashboard(): Dashboard {
   const activeGrandPrix = nextEvent
     ? allSessions.find((session) => session.eventId === nextEvent.id && session.type === "RAC")
     : null;
-  const activeWeekendIsPartial = Boolean(activeSprint && storedSessionIds.has(activeSprint.id) && activeGrandPrix && !storedSessionIds.has(activeGrandPrix.id));
+  const activeWeekendIsPartial = Boolean(activeSprint && storedSessionIds.has(activeSprint.id) && activeGrandPrix && !grandPrixIsClosed(activeGrandPrix));
   const lastCompletedEvent = [...calendar].reverse().find((event) => {
     const grandPrix = allSessions.find((session) => session.eventId === event.id && session.type === "RAC");
-    return Boolean(grandPrix && storedSessionIds.has(grandPrix.id));
+    return grandPrixIsClosed(grandPrix);
   }) ?? null;
+  const lastGrandPrixWasCancelled = Boolean(lastCompletedEvent && allSessions.find(
+    (session) => session.eventId === lastCompletedEvent.id && session.type === "RAC"
+  )?.status === "CANCELLED");
   const activeHasResult = Boolean(nextEvent && allSessions.some((session) => session.eventId === nextEvent.id && storedSessionIds.has(session.id)));
   // Before/during a weekend show its live card. Once Sunday is official, keep
   // that completed card on screen and reveal the following GP underneath.
-  const displayEvent = nextEvent && (!lastCompletedEvent || activeHasResult || !activeGrandPrix)
+  const displayEvent = nextEvent && (!lastCompletedEvent || activeHasResult || !activeGrandPrix || lastGrandPrixWasCancelled)
     ? nextEvent
     : lastCompletedEvent;
   const circuitNames = new Map(db.select().from(circuits).all().map((c) => [c.id, c.name]));
