@@ -192,3 +192,4 @@
 .partial-dot{display:inline-block;width:7px;height:7px;border:1px solid var(--green);border-radius:50%;margin-right:3px;background:linear-gradient(90deg,var(--green) 0 50%,transparent 50%)}
 /* Keeps the achieved sprint result distinct from the target it beat. */
 .session-achieved{display:block;color:#8fcfac!important;font-size:9px!important;letter-spacing:.8px;margin-bottom:-3px}
+.champion-mark{display:block;color:var(--orange);font:700 10px 'Barlow Condensed';letter-spacing:1px;margin-top:5px}

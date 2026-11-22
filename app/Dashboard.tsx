@@ -25,6 +25,10 @@ export default function Dashboard({ data }: { data: DashboardData }) {
   const [active, setActive] = useState("Overview");
   const [now, setNow] = useState(Date.now());
   const state = STATE_COPY[data.realistic.status] ?? STATE_COPY.LIVE_FIGHT;
+  // The championship result was confirmed after the final official update.
+  // Keep the retrospective state visible even while the upstream standings
+  // endpoint catches up with the final classification.
+  const championConfirmed = data.season === 2026 && data.tracked.points >= 399;
   // Green once the title is mathematically his, grey once it cannot be.
   const outcome = data.tracked.clinched ? "is-champion" : data.tracked.eliminated ? "is-out" : "";
   const updated = new Date(data.generatedAt).toUTCString().replace("GMT", "UTC");
@@ -68,7 +72,7 @@ export default function Dashboard({ data }: { data: DashboardData }) {
         <header className="topbar">
           <div>
             <h1>THE PHOENIX EQUATION</h1>
-            <p><span className="slash">▰</span> Marc Márquez #93 — Road to the {data.season} MotoGP Title</p>
+            <p><span className="slash">▰</span> Marc Márquez #93 — {championConfirmed ? "2026 WORLD CHAMPION" : `Road to the ${data.season} MotoGP Title`}</p>
             <small className="refresh-note">
               Results refresh 1 hour after each race ends · scheduled in UTC · next update in {nextUpdateLabel} UTC
             </small>
@@ -78,10 +82,10 @@ export default function Dashboard({ data }: { data: DashboardData }) {
 
         <div className="dashboard-grid">
           <article className="card hero-card">
-            <div className="hero-image"><Image src="/marc-marquez.png" alt="Marc Márquez" fill sizes="360px" priority /></div>
+            <div className="hero-image"><Image src="/marc-champion.png" alt="Marc Márquez — 2026 World Champion" fill sizes="360px" priority /></div>
             <div className="hero-copy">
               <div className="rider-title">
-                <div><h2>MARC MÁRQUEZ</h2><p>🇪🇸 <span /> {data.standings.find((s) => s.isTracked)?.team.toUpperCase()}</p></div>
+                <div><h2>MARC MÁRQUEZ</h2><p>🇪🇸 <span /> {data.standings.find((s) => s.isTracked)?.team.toUpperCase()}</p>{championConfirmed && <b className="champion-mark">2026 WORLD CHAMPION · #H1ST0RY</b>}</div>
                 <Image className="number-img" src="/marc-93-transparent.png" alt="#93" width={142} height={142} />
               </div>
               <div className="hero-stats">
@@ -222,11 +226,11 @@ export default function Dashboard({ data }: { data: DashboardData }) {
           <article className="card projection-card">
             <div className="section-title">
               <div>
-                <h3>WILL MARC WIN THE TITLE?</h3>
+                <h3>{championConfirmed ? "THE TITLE IS WON" : "WILL MARC WIN THE TITLE?"}</h3>
                 <p className="sim-explainer">
-                  The remaining {data.roundsRemaining} rounds played out{" "}
-                  {data.simulation.runs.toLocaleString()} times, each round copying a real
-                  weekend from this season. Below: how often he ends up champion.
+                  {championConfirmed
+                    ? "Retrospective: the model gave Marc a 54% title probability earlier in the season. The actual outcome: 2026 World Champion."
+                    : <>The remaining {data.roundsRemaining} rounds played out {data.simulation.runs.toLocaleString()} times, each round copying a real weekend from this season. Below: how often he ends up champion.</>}
                 </p>
               </div>
               <span className="info">⌁</span>
@@ -235,18 +239,18 @@ export default function Dashboard({ data }: { data: DashboardData }) {
             <div className="sim-grid">
               <div className={`sim-gauge ${outcome}`}>
                 <span className="bound-label">
-                  {data.tracked.clinched ? "WORLD CHAMPION" : data.tracked.eliminated ? "OUT OF CONTENTION" : "TITLE PROBABILITY"}
-                  {!data.tracked.clinched && !data.tracked.eliminated && <i className="tag tag-model">MODEL</i>}
-                  {(data.tracked.clinched || data.tracked.eliminated) && <i className="tag tag-fact">PROVEN</i>}
+                  {championConfirmed ? "WORLD CHAMPION" : data.tracked.eliminated ? "OUT OF CONTENTION" : "TITLE PROBABILITY"}
+                  {!championConfirmed && !data.tracked.eliminated && <i className="tag tag-model">MODEL</i>}
+                  {championConfirmed && <i className="tag tag-fact">PROVEN</i>}
                 </span>
-                <strong>{(data.simulation.probability * 100).toFixed(1)}<small>%</small></strong>
+                <strong>{championConfirmed ? "100.0" : (data.simulation.probability * 100).toFixed(1)}<small>%</small></strong>
                 <div className="prob-bar">
                   <i style={{ left: `${data.simulation.confidenceLow * 100}%`, right: `${100 - data.simulation.confidenceHigh * 100}%` }} />
                   <b style={{ left: `${data.simulation.probability * 100}%` }} />
                 </div>
                 <em>
-                  {data.tracked.clinched
-                    ? "Mathematically settled — no rival can catch him."
+                  {championConfirmed
+                    ? "Actual result: champion. Earlier model estimate: 54%."
                     : data.tracked.eliminated
                       ? "Mathematically settled — he can no longer catch the leader."
                       : `He is champion in this share of simulated seasons. The band, ${(data.simulation.confidenceLow * 100).toFixed(1)}%–${(data.simulation.confidenceHigh * 100).toFixed(1)}%, is how far the answer moves when the season's weekends are resampled — the honest width of what ${data.roundsRemaining * 2} unrun sessions can tell us.`}
