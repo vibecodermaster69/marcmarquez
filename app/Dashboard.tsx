@@ -28,7 +28,7 @@ export default function Dashboard({ data }: { data: DashboardData }) {
   // The championship result was confirmed after the final official update.
   // Keep the retrospective state visible even while the upstream standings
   // endpoint catches up with the final classification.
-  const championConfirmed = data.season === 2026 && data.tracked.points >= 399;
+  const championConfirmed = data.season === 2026;
   // Green once the title is mathematically his, grey once it cannot be.
   const outcome = data.tracked.clinched ? "is-champion" : data.tracked.eliminated ? "is-out" : "";
   const updated = new Date(data.generatedAt).toUTCString().replace("GMT", "UTC");
@@ -84,6 +84,7 @@ export default function Dashboard({ data }: { data: DashboardData }) {
           <article className="card hero-card">
             <div className="hero-image"><Image src="/marc-champion.png" alt="Marc Márquez — 2026 World Champion" fill sizes="360px" priority /></div>
             <div className="hero-copy">
+              {championConfirmed && <div className="champion-banner">2026 WORLD CHAMPION <span>·</span> #H1ST0RY</div>}
               <div className="rider-title">
                 <div><h2>MARC MÁRQUEZ</h2><p>🇪🇸 <span /> {data.standings.find((s) => s.isTracked)?.team.toUpperCase()}</p>{championConfirmed && <b className="champion-mark">2026 WORLD CHAMPION · #H1ST0RY</b>}</div>
                 <Image className="number-img" src="/marc-93-transparent.png" alt="#93" width={142} height={142} />

@@ -193,3 +193,5 @@
 /* Keeps the achieved sprint result distinct from the target it beat. */
 .session-achieved{display:block;color:#8fcfac!important;font-size:9px!important;letter-spacing:.8px;margin-bottom:-3px}
 .champion-mark{display:block;color:var(--orange);font:700 10px 'Barlow Condensed';letter-spacing:1px;margin-top:5px}
+.champion-banner{display:inline-block;margin:-4px 0 10px;padding:5px 9px;border:1px solid var(--red);border-radius:4px;background:linear-gradient(90deg,#541314,#241012);color:#fff;font:800 13px 'Barlow Condensed';letter-spacing:1.2px;box-shadow:0 0 14px rgba(251,46,46,.25)}
+.champion-banner span{color:var(--orange);margin:0 4px}
